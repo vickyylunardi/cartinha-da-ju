@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cartinha</title>
+
+  <!-- Fonte bonita -->
+  <link href="https://fonts.googleapis.com/css2?family=Sofia&display=swap" rel="stylesheet">
+
+  <!-- GSAP para animações -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      background-color: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Sofia', cursive;
+      cursor: url("https://i.postimg.cc/GtLCdKxR/sisors.png"), pointer;
+    }
+
+    .envelop {
+      width: 25rem;
+      height: 20rem;
+      position: relative;
+    }
+
+    .envelop__front-paper,
+    .envelop__back-paper,
+    .envelop__up-paper,
+    .envelop__content {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      bottom: 0;
+    }
+
+    .envelop__front-paper {
+      background-color: #ba9872;
+      border: 0.35rem solid #967b5c;
+      border-radius: 0.7rem;
+      clip-path: polygon(100% 0%, 50% 70%, 0% 0%, 0% 100%, 100% 100%);
+      z-index: 300;
+    }
+
+    .envelop__back-paper {
+      background-color: #967b5c;
+      border-radius: 0.7rem;
+      clip-path: polygon(0% 0%, 100% 0%, 90% 100%, 0% 90%);
+      z-index: 100;
+    }
+
+    .envelop__up-paper {
+      background-color: #967b5c;
+      border-radius: 0.7rem;
+      z-index: 400;
+      clip-path: polygon(0% 0%, 100% 0%, 50% 81%);
+      transition: all 0.5s ease;
+    }
+
+    .envelop__sticker {
+      width: 20%;
+      height: 20%;
+      position: absolute;
+      top: 30%;
+      left: 0;
+      right: 0;
+      margin: auto;
+      background-color: #fff;
+      background-image: url("https://www.freepnglogos.com/uploads/heart-png/emoji-heart-33.png");
+      background-size: 2rem;
+      background-position: center;
+      background-repeat: no-repeat;
+      border: 0.3rem solid #e2e2e2;
+      border-radius: 50%;
+      z-index: 500;
+      cursor: pointer;
+    }
+
+    .envelop__content {
+      z-index: 200;
+      display: none;
+    }
+
+    .love-notes {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .note {
+      width: 95%;
+      height: 30%;
+      background-color: #f9f9f9;
+      position: absolute;
+      overflow: hidden;
+      transition: height 0.5s ease;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    }
+
+    .note:nth-child(1) {
+      bottom: 60%;
+    }
+
+    .note:nth-child(2) {
+      bottom: 40%;
+    }
+
+    .note:nth-child(3) {
+      bottom: 20%;
+    }
+
+    .note:hover {
+      cursor: pointer;
+      height: 45%;
+    }
+
+    .note__text {
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .note__text p {
+      font-size: 1.15rem;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="envelop">
+    <div class="envelop__front-paper"></div>
+    <div class="envelop__back-paper"></div>
+    <div class="envelop__up-paper js-up-paper"></div>
+    <div class="envelop__sticker js-sticker" title="Clique para abrir 💌"></div>
+    <div class="envelop__content js-envelop-content">
+      <div class="love-notes">
+        <div class="note js-note">
+          <div class="note__text">
+            <p>Boa noite minha gatinha!❤️❤️❤️❤️</p>
+          </div>
+        </div>
+        <div class="note js-note">
+          <div class="note__text">
+            <p>Espero que sua dorzinha passe e você fique bem logo logoooo.</p>
+          </div>
+        </div>
+        <div class="note js-note">
+          <div class="note__text">
+            <p>Você é muito linda e é bem diva, a mais mais, quero te ver logo.</p>
+            <p>❤️</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const sticker = document.querySelector(".js-sticker");
+    const upPaper = document.querySelector(".js-up-paper");
+    const content = document.querySelector(".js-envelop-content");
+    const notes = document.querySelectorAll(".js-note");
+    sticker.addEventListener("click", () => {
+      // Abrir a aba da carta
+      gsap.to(upPaper, {
+        bottom: "97%",
+        rotation: 180,
+        zIndex: 200,
+        clipPath: "polygon(0% 0%, 100% 0%, 50% 61%)",
+        duration: 0.6,
+        onComplete: () => {
+          // Mostrar conteúdo depois da animação
+          content.style.display = "block";
+        }
+      });
+      // Impede novo clique
+      sticker.style.display = "none";
+    });
+    notes.forEach((note, i) => {
+      note.addEventListener("click", () => {
+        const isActive = note.classList.contains("active");
+        notes.forEach(n => {
+          n.classList.remove("active");
+          gsap.set(n, {
+            height: "30%"
+          });
+        });
+        if (!isActive) {
+          note.classList.add("active");
+          gsap.set(note, {
+            height: `${70 + i * 20}%`
+          });
+        }
+      });
+    });
+  </script>
+
+</body>
+
+</html>
